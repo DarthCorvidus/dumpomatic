@@ -1,0 +1,47 @@
+dumpomatic
+
+dumpomatic allows to define one or more database dump jobs for several SQL
+databases (PostgreSQL and MySQL/MariaDB as of yet) and servers. Dumps will be
+stored within a directory bearing the name of the current date and will be
+compressed using gzip.
+
+Usage:
+	dumpomatic.php <file or directory>
+
+dumpomatic's parameter might be a configuration file or a directory containing
+several configuration files.
+Please note that dumpomatic will use the current date at call time.
+
+Configuration:
+
+dumpomatic expects an ini style configuration file, containing the following,
+mandatory parameters:
+
+	host
+	user
+	password
+	driver   use PDO driver name here (pgsql or mysql)
+	storage  directory to which dumpomatic should backup
+
+Optional parameters:
+
+	include databases to include, comma separated.
+	exclude databases to exclude, comma separated.
+
+Please note that include has precedence over exclude, ie dumpomatic will first
+skip every database which is not included and then skip every database which is
+excluded.
+
+Process:
+
+Once called, dumpomatic tries to connect to the defined database. It then
+fetches a list of available databases, removing any items which are not
+included or which are excluded.
+It then creates a temporary folder within the storage directory, to which the
+selected databases are dumped and gzipped, first as a temporary, then as a final
+file.
+The temporary file is then renamed to the current date at call time.
+
+If a dump jobs throws an exception, a warning will be issued and the next job
+will be run. At the end of each run, dumpomatic will print a list of failed
+jobs.
