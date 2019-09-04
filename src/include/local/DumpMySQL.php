@@ -14,7 +14,7 @@ class DumpMySQL extends Dump {
 		 * file, no additional security issues occur, but we do not have to
 		 * use MySQLs password on the command line.
 		 */
-		$this->extra = realpath(dirname($this->config->file))."/www-intra.cnf";
+		$this->extra = realpath(dirname($this->config->file))."/".basename($this->config->file).".temp";
 		$extra[] = "[client]";
 		$extra[] = "host=".$this->config->host;
 		$extra[] = "user=".$this->config->user;
@@ -38,6 +38,7 @@ class DumpMySQL extends Dump {
 		$tempzip = $target."/".$name.".temp.sql.gz";
 		$final = $target."/".$name.".sql.gz";
 		$command[] = "mysqldump ";
+		$command[] = "--defaults-extra-file=".escapeshellarg($this->extra);
 		$command[] = $name;
 		$command[] = "-u".$this->config->user;
 		$command[] = "-h ".$this->config->host;
