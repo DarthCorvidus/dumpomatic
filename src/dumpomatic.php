@@ -13,5 +13,5 @@ require_once __DIR__.'/include/local/DumpPostgreSQL.php';
 require_once __DIR__.'/include/local/DumpMySQL.php';
 require_once __DIR__.'/include/local/DumpJobs.php';
 #/Include
-$jobs = new DumpJobs($argv[1]);
+$jobs = new DumpJobs($argv);
 $jobs->run();

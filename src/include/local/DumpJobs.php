@@ -8,17 +8,21 @@ class DumpJobs {
 	private $date;
 	private $configs = [];
 	private $failed = [];
-	function __construct(string $config) {
+	function __construct(array $argv) {
 		$this->date = new Date();
-		if(!file_exists($config)) {
-			echo "Configuration '".$config."' not available.".PHP_EOL;
+		if(!isset($argv[1])) {
+			echo "Configuration parameter missing.".PHP_EOL;
 			die();
 		}
-		if(is_file($config)) {
-			$this->configs[] = new Config($config);
+		if(!file_exists($argv[1])) {
+			echo "Configuration '".$argv[1]."' not available.".PHP_EOL;
+			die();
+		}
+		if(is_file($argv[1])) {
+			$this->configs[] = new Config($argv[1]);
 			return;
 		}
-		foreach(glob($config."/*.conf") as $value) {
+		foreach(glob($argv[1]."/*.conf") as $value) {
 			try {
 				$this->configs[] = new Config($value);
 			} catch (Exception $e) {
