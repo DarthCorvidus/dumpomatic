@@ -8,8 +8,8 @@ class DumpJob {
 	private $user;
 	private $storage;
 	private $allowedRetention = array("daily", "weekly", "monthly", "yearly");
-	private $include = array();
-	private $exclude = array();
+	private $include;
+	private $exclude;
 	private function __construct() {
 		;
 	}
@@ -24,9 +24,13 @@ class DumpJob {
 		$job->password = $job->importString("password");
 		$job->user = $job->importString("user");
 		$job->storage = $job->importPath("storage");
-		
-		#$job->include = $job->importArray("include");
-		#$job->exclude = $job->importArray("exclude");
+		if(isset($job->parsed["include"])) {
+			$job->include = $job->importArray("include");
+		}
+		if(isset($job->parsed["exclude"])) {
+			$job->exclude = $job->importArray("exclude");
+		}
+
 	return $job;
 	}
 	
@@ -52,14 +56,7 @@ class DumpJob {
 	}
 	
 	private function importArray(string $key): array {
-		#if(!isset($this->parsed[$key])) {
-		#	return array();
-		#}
-		#if(empty($this->parsed[$key])) {
-		#	return array();
-		#}
-		#$exp = preg_split("/ *,{1} */", $this->parsed[$key]);
-	#return $exp;
+		return $this->parsed[$key];
 	}
 
 	function getName(): string {
@@ -104,4 +101,27 @@ class DumpJob {
 		$this->existingRetention($retention);
 		return $this->parsed["retention"][$retention];
 	}
+	
+	function hasInclude(): bool {
+		return is_array($this->include);
+	}
+	
+	function getInclude(): array {
+		if($this->include==NULL) {
+			throw new OutOfBoundsException("No include list defined");
+		}
+		return $this->include;
+	}
+	
+	function hasExclude(): bool {
+		return is_array($this->exclude);
+	}
+	
+	function getExclude(): array {
+		if($this->exclude==NULL) {
+			throw new OutOfBoundsException("No exclude list defined");
+		}
+		return $this->exclude;
+	}
+
 }

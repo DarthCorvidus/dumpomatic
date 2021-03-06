@@ -140,4 +140,51 @@ class DumpJobTest extends TestCase {
 		$this->expectException(InvalidArgumentException::class);
 		$job = DumpJob::fromArray($array);
 	}
+	
+	function testHasIncludeList() {
+		$array = $this->getBaseArray();
+		$job = DumpJob::fromArray($array);
+		$this->assertEquals(FALSE, $job->hasInclude());
+		$array["include"] = array("employees", "accounting");
+		$job = DumpJob::fromArray($array);
+		$this->assertEquals(TRUE, $job->hasInclude());
+	}
+	
+	function testGetIncludeList() {
+		$array = $this->getBaseArray();
+		$array["include"] = array("employees", "accounting");
+		$job = DumpJob::fromArray($array);
+		$this->assertEquals(array("employees", "accounting"), $job->getInclude());
+	}
+
+	function testGetNonExistentIncludeList() {
+		$array = $this->getBaseArray();
+		$job = DumpJob::fromArray($array);
+		$this->expectException(OutOfBoundsException::class);
+		$job->getInclude();
+	}
+
+	function testHasExcludeList() {
+		$array = $this->getBaseArray();
+		$job = DumpJob::fromArray($array);
+		$this->assertEquals(FALSE, $job->hasInclude());
+		$array["exclude"] = array("employees", "accounting");
+		$job = DumpJob::fromArray($array);
+		$this->assertEquals(TRUE, $job->hasExclude());
+	}
+	
+	function testGetExcludeList() {
+		$array = $this->getBaseArray();
+		$array["exclude"] = array("employees", "accounting");
+		$job = DumpJob::fromArray($array);
+		$this->assertEquals(array("employees", "accounting"), $job->getExclude());
+	}
+
+	function testGetNonExistentExcludeList() {
+		$array = $this->getBaseArray();
+		$job = DumpJob::fromArray($array);
+		$this->expectException(OutOfBoundsException::class);
+		$job->getExclude();
+	}
+
 }
