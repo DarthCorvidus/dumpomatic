@@ -2,7 +2,6 @@
 class DumpJob {
 	private $parsed;
 	private $name;
-	private $file;
 	private $driver;
 	private $host;
 	private $password;
@@ -15,25 +14,31 @@ class DumpJob {
 		;
 	}
 	
-	static function fromArray(array $array, string $filename): DumpJob {
+	static function fromArray(array $array): DumpJob {
 		$job = new DumpJob();
+		$job->sanityCheck($array);
 		$job->parsed = $array;
-		$job->file = $filename;
 		$job->name = $job->importString("name");
 		$job->driver = $job->importString("driver");
 		$job->host = $job->importString("host");
 		$job->password = $job->importString("password");
 		$job->user = $job->importString("user");
 		$job->storage = $job->importPath("storage");
-
+		
 		#$job->include = $job->importArray("include");
 		#$job->exclude = $job->importArray("exclude");
 	return $job;
 	}
 	
+	private function sanityCheck(array $array) {
+		if(isset($array["exclude"]) && isset($array["include"])) {
+			throw new InvalidArgumentException("parameters 'exclude' and 'include' are mutually exclusive");
+		}
+	}
+	
 	private function importString(string $key): string {
 		if(!isset($this->parsed[$key])) {
-			throw new Exception("Configuration error in ".$this->file.": value ".$key." not defined");
+			throw new Exception("value ".$key." not defined");
 		}
 	return $this->parsed[$key];
 	}
@@ -41,7 +46,7 @@ class DumpJob {
 	private function importPath(string $key): string {
 		$path = $this->importString($key);
 		if(!is_dir($path)) {
-			throw new Exception("Configuration in ".$this->file.": path ".$path." does not exist");
+			throw new Exception("path ".$path." does not exist");
 		}
 	return $path;
 	}

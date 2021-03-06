@@ -1,0 +1,6 @@
+- name: Sample database
+  host: sample.example.com
+  user: backup
+  password: TotallySecurePassword
+  storage: tests/storage/
+  driver: mysql
