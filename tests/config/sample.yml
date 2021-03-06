@@ -1,0 +1,11 @@
+- name: Sample database
+  host: sample.example.com
+  user: backup
+  password: TotallySecurePassword
+  storage: tests/storage/
+  driver: mysql
+  retention:
+      daily: 28
+      weekly: 52
+      monthly: 12
+      yearly: 10
