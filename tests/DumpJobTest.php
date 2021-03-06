@@ -141,6 +141,20 @@ class DumpJobTest extends TestCase {
 		$job = DumpJob::fromArray($array);
 	}
 	
+	function testIncludeWrongType() {
+		$array = $this->getBaseArray();
+		$array["include"] = 15;
+		$this->expectException(InvalidArgumentException::class);
+		$job = DumpJob::fromArray($array);
+	}
+
+	function testExcludeWrongType() {
+		$array = $this->getBaseArray();
+		$array["exclude"] = 15;
+		$this->expectException(InvalidArgumentException::class);
+		$job = DumpJob::fromArray($array);
+	}
+	
 	function testHasIncludeList() {
 		$array = $this->getBaseArray();
 		$job = DumpJob::fromArray($array);

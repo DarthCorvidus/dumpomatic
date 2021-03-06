@@ -56,6 +56,9 @@ class DumpJob {
 	}
 	
 	private function importArray(string $key): array {
+		if(!is_array($this->parsed[$key])) {
+			throw new InvalidArgumentException("expected array for key ".$key);
+		}
 		return $this->parsed[$key];
 	}
 
