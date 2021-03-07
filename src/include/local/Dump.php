@@ -26,6 +26,38 @@ abstract class Dump {
 		exec($rm);
 	}
 	
+	private function honorRetention() {
+		if($this->job->hasRetention("daily")) {
+			$this->honorRetentionDaily();
+		}
+	}
+	
+	private function honorRetentionDaily() {
+		$delete = array();
+		$nowJulian = $this->date->getNumeric();
+		$uptoJulian = $nowJulian-$this->job->getRetention("daily");
+		echo $nowJulian.PHP_EOL;
+		foreach(glob($this->job->getStorage()."/*") as $value) {
+			if(!preg_match("/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/", basename($value))) {
+				continue;
+			}
+			$date = Date::fromIsodate(basename($value));
+			if($date->getNumeric()<=$uptoJulian) {
+				$delete[] = $value;
+			}
+		}
+		if(empty($delete)) {
+			return;
+		}
+		echo "Apply daily retention (".$this->job->getRetention("daily")." days)".PHP_EOL;
+		foreach($delete as $key => $value) {
+			echo "\tExpiring ".$value."...";
+			exec("rm ".escapeshellarg($value)." -r");
+			echo PHP_EOL;
+					
+		}
+	}
+	
 	function run() {
 		echo "Running ".$this->job->getName().PHP_EOL;
 		$names = $this->getDatabaseNames();
@@ -50,6 +82,7 @@ abstract class Dump {
 			$this->dumpDatabase($value, $temp);
 		}
 		rename($temp, $final);
+		$this->honorRetention();
 		echo PHP_EOL;
 	}
 }
