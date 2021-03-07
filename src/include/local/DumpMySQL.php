@@ -45,7 +45,14 @@ class DumpMySQL extends Dump {
 		$command[] = "> ".escapeshellarg($temp);
 		$cmd = implode(" ", $command);
 		echo $cmd.PHP_EOL;
-		exec($cmd, $out, $id);
+		$out = "";
+		$returnCode = 0;
+		exec($cmd, $out, $returnCode);
+		if($returnCode>=2) {
+			echo "Error dumping ".$name.PHP_EOL.PHP_EOL;
+			unlink($temp);
+			return;
+		}
 		$zip = "gzip ".escapeshellarg($temp);
 		echo $zip.PHP_EOL;
 		exec($zip);
