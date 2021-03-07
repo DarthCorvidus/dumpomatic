@@ -7,8 +7,8 @@
 class DumpPostgreSQL extends Dump {
 	public function getDatabaseNames():array {
 		$dbnames = array();
-		$dsn = "pgsql:host=".$this->config->host.";dbname=postgres";
-		$pdo = new PDO($dsn, $this->config->user, $this->config->password);
+		$dsn = "pgsql:host=".$this->job->getHost().";dbname=postgres";
+		$pdo = new PDO($dsn, $this->job->getUser(), $this->job->getPassword());
 		$stmt = $pdo->prepare("select datname, usename from pg_database join pg_user ON (pg_database.datdba = pg_user.usesysid) order by datname");
 		$stmt->execute();
 		foreach($stmt as $key => $value) {
@@ -22,8 +22,8 @@ class DumpPostgreSQL extends Dump {
 		$tempzip = $target."/".$name.".temp.tar.gz";
 		$final = $target."/".$name.".tar.gz";
 		$command[] = "pg_dump ".$name;
-		$command[] = "-U".$this->config->user;
-		$command[] = "-h".$this->config->host;
+		$command[] = "-U".$this->job->getUser();
+		$command[] = "-h".$this->job->getHost();
 		$command[] = "-Ft";
 		$command[] = "--no-password";
 		$command[] = "> ".escapeshellarg($temp);
