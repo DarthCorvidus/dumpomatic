@@ -74,6 +74,10 @@ class DumpJob {
 		return $this->user;
 	}
 	
+	function getPassword(): string {
+		return $this->password;
+	}
+	
 	function getDriver(): string {
 		return $this->driver;
 	}

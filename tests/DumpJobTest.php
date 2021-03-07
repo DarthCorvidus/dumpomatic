@@ -53,6 +53,12 @@ class DumpJobTest extends TestCase {
 		$this->assertEquals("backup", $job->getUser());
 	}
 
+	function testGetPassword() {
+		$job = DumpJob::fromArray($this->getBaseArray());
+		$this->assertEquals("SecretPassword", $job->getPassword());
+	}
+
+	
 	function testGetDriver() {
 		$job = DumpJob::fromArray($this->getBaseArray());
 		$this->assertEquals("mysql", $job->getDriver());
