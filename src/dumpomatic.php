@@ -11,7 +11,9 @@ require_once __DIR__.'/include/local/Config.php';
 require_once __DIR__.'/include/local/Dump.php';
 require_once __DIR__.'/include/local/DumpPostgreSQL.php';
 require_once __DIR__.'/include/local/DumpMySQL.php';
+require_once __DIR__.'/include/local/DumpJob.php';
 require_once __DIR__.'/include/local/DumpJobs.php';
 #/Include
-$jobs = new DumpJobs($argv);
+
+$jobs = DumpJobs::fromYAML($argv[1]);
 $jobs->run();

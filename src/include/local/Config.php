@@ -5,15 +5,15 @@
  * @license GPLv3
  */
 class Config {
-	public $parsed;
-	public $file;
-	public $driver;
-	public $host;
-	public $password;
-	public $user;
-	public $storage;
-	public $include = array();
-	public $exclude = array();
+	private $parsed;
+	private $file;
+	private $driver;
+	private $host;
+	private $password;
+	private $user;
+	private $storage;
+	private $include = array();
+	private $exclude = array();
 	function __construct($file) {
 		$this->file = $file;
 		$this->parsed = parse_ini_file($file);
@@ -25,7 +25,7 @@ class Config {
 		$this->include = $this->importArray("include");
 		$this->exclude = $this->importArray("exclude");
 	}
-	
+		
 	private function importString(string $key): string {
 		if(!isset($this->parsed[$key])) {
 			throw new Exception("Configuration error in ".$this->file.": value ".$key." not defined");

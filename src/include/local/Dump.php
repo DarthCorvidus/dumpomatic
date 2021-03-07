@@ -5,11 +5,11 @@
  * @license GPLv3
  */
 abstract class Dump {
-	protected $config;
+	protected $job;
 	private $date;
-	function __construct(Date $date, Config $config) {
+	function __construct(Date $date, DumpJob $job) {
 		$this->date = $date;
-		$this->config = $config;
+		$this->job = $job;
 	}
 	
 	abstract function getDatabaseNames(): array;
@@ -27,10 +27,10 @@ abstract class Dump {
 	}
 	
 	function run() {
-		echo "Running ".$this->config->file.PHP_EOL;
+		echo "Running ".$this->job->getName().PHP_EOL;
 		$names = $this->getDatabaseNames();
-		$temp = $this->config->storage."/temp";
-		$final = $this->config->storage."/".$this->date->getDate("Y-m-d");
+		$temp = $this->job->getStorage()."/temp";
+		$final = $this->job->getStorage()."/".$this->date->getDate("Y-m-d");
 		$this->cleanup($temp);
 		$this->cleanup($final);
 		mkdir($temp);
@@ -38,11 +38,11 @@ abstract class Dump {
 			if(in_array($value, $this->getExcluded())) {
 				continue;
 			}
-			if(!empty($this->config->include) && !in_array($value, $this->config->include)) {
+			if($this->job->hasInclude() && !in_array($value, $this->job->getInclude())) {
 				echo "Skipping ".$value." (not included)".PHP_EOL;
 				continue;
 			}
-			if(!empty($this->config->exclude) && in_array($value, $this->config->exclude)) {
+			if($this->job->hasExclude() && in_array($value, $this->job->getExclude())) {
 				echo "Skipping ".$value." (excluded)".PHP_EOL;
 				continue;
 			}

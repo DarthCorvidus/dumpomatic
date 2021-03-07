@@ -2,10 +2,30 @@
   host: sample.example.com
   user: backup
   password: TotallySecurePassword
-  storage: tests/storage/
+  storage: tests/storage/mysql/
   driver: mysql
   retention:
       daily: 28
       weekly: 52
       monthly: 12
       yearly: 10
+  include:
+      - employees
+
+- name: Sample PostgreSQL database
+  host: pgsql.example.com
+  user: backup
+  password: TotallySecurePassword
+  storage: tests/storage/postgres/
+  driver: pgsql
+  exclude:
+      - logging
+
+- name: Sample invalid configuration
+  host: pgsql.example.com
+  user: backup
+  password: TotallySecurePassword
+  storage: tests/storage/invalid/
+  driver: pgsql
+  exclude:
+      - logging

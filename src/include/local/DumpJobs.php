@@ -8,6 +8,21 @@ class DumpJobs {
 	private $date;
 	private $configs = [];
 	private $failed = [];
+	private $jobs = [];
+	static function fromYAML($file): DumpJobs {
+		$parsed = yaml_parse_file($file);
+		$jobs = new DumpJobs();
+		foreach($parsed as $key => $value) {
+			try {
+				$jobs->jobs[] = DumpJob::fromArray($value);
+				$jobs->date = new Date();
+			} catch (Exception $e) {
+				$jobs->failed[] = $file." ".$e->getMessage();
+			}
+		}
+	return $jobs;
+	}
+	/*
 	function __construct(array $argv) {
 		$this->date = new Date();
 		if(!isset($argv[1])) {
@@ -31,27 +46,27 @@ class DumpJobs {
 			}
 		}
 	}
-	
-	private function runJob(Config $config) {
-		if($config->driver=="pgsql") {
-			$backup = new DumpPostgreSQL($this->date, $config);
+	*/
+	private function runJob(DumpJob $job) {
+		if($job->getDriver()=="pgsql") {
+			$backup = new DumpPostgreSQL($this->date, $job);
 			$backup->run();
 		return;
 		}
-		if($config->driver=="mysql") {
-			$backup = new DumpMySQL($this->date, $config);
+		if($job->getDriver()=="mysql") {
+			$backup = new DumpMySQL($this->date, $job);
 			$backup->run();
 		return;
 		}
 	}
 			
 	function run() {
-		foreach($this->configs as $value) {
+		foreach($this->jobs as $value) {
 			try {
 				$this->runJob($value);
 			} catch (Exception $e) {
-				echo "Configuration ".$value->file." failed:".PHP_EOL;
-				$this->failed[] = $value->file;
+				echo "Configuration '".$value->getName()."' failed:".PHP_EOL;
+				$this->failed[] = $value->getName().":".$e->getMessage();
 				echo $e->getMessage().PHP_EOL.PHP_EOL;
 			}
 		}
