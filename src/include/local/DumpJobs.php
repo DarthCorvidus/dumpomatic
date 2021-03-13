@@ -75,7 +75,7 @@ class DumpJobs {
 		}
 		echo "Some jobs failed:".PHP_EOL;
 		foreach($this->failed as $key => $value) {
-			echo "\t".basename($value).PHP_EOL;
+			echo "\t".$value.PHP_EOL;
 		}
 	}
 }

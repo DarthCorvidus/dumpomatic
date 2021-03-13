@@ -34,6 +34,14 @@ class DumpJobTest extends TestCase {
 	
 	
 	function testFromArray() {
+		$array = $this->getBaseArray();
+		$array["storage"] = "tests/storag/";
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage("path 'tests/storag/' does not exist");
+		$job = DumpJob::fromArray($array);
+	}
+
+	function testFromArrayNoStorage() {
 		$job = DumpJob::fromArray($this->getBaseArray());
 		$this->assertInstanceOf("DumpJob", $job);
 	}
@@ -68,7 +76,7 @@ class DumpJobTest extends TestCase {
 		$job = DumpJob::fromArray($this->getBaseArray());
 		$this->assertEquals("tests/storage/", $job->getStorage());
 	}
-
+	
 	function testHasRetentionDaily() {
 		$array = $this->getRetentionArray();
 		$job = DumpJob::fromArray($array);

@@ -50,7 +50,7 @@ class DumpJob {
 	private function importPath(string $key): string {
 		$path = $this->importString($key);
 		if(!is_dir($path)) {
-			throw new Exception("path ".$path." does not exist");
+			throw new Exception("path '".$path."' does not exist");
 		}
 	return $path;
 	}
