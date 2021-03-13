@@ -10,7 +10,16 @@ class DumpJobs {
 	private $failed = [];
 	private $jobs = [];
 	static function fromYAML($file): DumpJobs {
+		if(is_dir($file)) {
+			throw new InvalidArgumentException("path '".$file."' is a directory.");
+		}
+		if(!file_exists($file)) {
+			throw new InvalidArgumentException("file '".$file."' does not exist.");
+		}
 		$parsed = yaml_parse_file($file);
+		if(empty($parsed) or ! is_array($parsed)) {
+			throw new InvalidArgumentException("file '".$file."' could not be parsed.");
+		}
 		$jobs = new DumpJobs();
 		foreach($parsed as $key => $value) {
 			try {

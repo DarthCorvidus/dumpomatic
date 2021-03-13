@@ -17,4 +17,24 @@ class DumpJobsTest extends TestCase {
 		$jobs = DumpJobs::fromYAML(__DIR__."/config/sample.yml");
 		$this->assertInstanceOf("DumpJobs", $jobs);
 	}
+	
+	function testFromDirectory() {
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage("path '".__DIR__."/config/' is a directory");
+		$jobs = DumpJobs::fromYAML(__DIR__."/config/");
+	}
+	
+	function testFromNonExistent() {
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage("file '".__DIR__."/config/fantasy.yml' does not exist");
+		$jobs = DumpJobs::fromYAML(__DIR__."/config/fantasy.yml");
+	}
+	
+	function testFromNoYAML() {
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage("file '".__DIR__."/config/malformed.yml' could not be parsed.");
+		$jobs = DumpJobs::fromYAML(__DIR__."/config/malformed.yml");
+	}
+
+
 }
