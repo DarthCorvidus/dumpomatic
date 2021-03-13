@@ -1,1 +1,105 @@
-Tool to define backup jobs for SQL databases.
+Tool to define backup jobs for SQL databases
+
+MOTIVATION
+I often came to notice that databases are not backed up properly, if at all.
+It's best to create dumps instead of trying to backup the files of a running
+DBMS, unless you've got a fancy backup solution that explicitly states that it
+is able to do so.
+When I started to address the problem, I wanted to have every database dumped
+separatedly (in case only one needs to be restored) and I wanted to keep a
+certain amount of dumps (in case I needed to go back a few days), but wanted to
+remove older dumps (unless wanting to have a server full of dumps).
+I thought this to be beyond the reasonable scope of a shell script solution, so
+I decided to use PHP instead.
+
+DESCRIPTION
+
+Dumpomatic serves as a tool to do regular backups of databases and keep a
+backlog of daily entries, for a custom amount of days. To address the fact that
+a Database Management System may contain more than one database, Dumpomatic
+makes a separate dump of every database, also allowing to include or exclude a
+set of databases.
+
+Dump jobs are defined via a YAML file, which contains access parameters as well
+as storage targets, retention periods and include/exclude lists.
+
+On running Dumpomatic, it will collect a list of databases from a DBMS via PHP's
+PDO interface to then use the gathered information to to each dump via the DBMS'
+own tools, like mysqldump.
+
+Currently, MySQL/MariaDB and PostgreSQL are supported.
+
+USAGE
+
+Dumpomatic is called on a YAML file which contains one or several job
+definitions:
+
+    ./dumpomatic example.yml
+
+Dumpomatic will then process example.yml and execute every defined jobs. It
+won't halt on recoverable errors, but print a summary of missed jobs at the end.
+Dumps will be put into a directory YYYY-MM-DD below the storage, which contains
+dumps of databases.
+Dumps will first be put into a temporary directory, which is then renamed to
+its final name.
+
+CONFIGURATION
+
+name:
+The name of a certain job as a human readable description.
+
+host:
+Hostname of the DBMS server.
+
+user:
+Username to be used when accessing the database.
+
+password:
+Password to be used when accessing the database.
+
+driver:
+Database driver, as used by PDO. Only mysql/pgsql implemented so far.
+
+storage:
+Target directory to store backups to.
+
+exclude (optional):
+List of databases to be excluded. Please note that exclude is incompatible with
+include.
+
+include (optional):
+List of databases to be included. Please note that include is incompatible with
+exclude.
+
+retention:
+Additional parameters to define retention (optional). Entries outside the
+retention period will be deleted.
+
+  daily:
+  Expires all daily entries before retention period.
+
+  PLEASE NOTE THAT RETENTION PERIODS BEYOND DAILY ARE NOT IMPLEMENTED YET.
+  weekly:
+  Expires all weekly entries before retention period.
+
+  monthly:
+  Expires all yearly entries before retention period.
+
+  yearly:
+  Expires all yearly entries before retention period.
+
+CONSIDERATIONS
+
+You should not store database dumps or credentials within a world readable
+directory. If a webserver is involved, stay away from its root directory, but
+keep in mind that there are many exploits that allow to read arbitrary files
+outside of the web root if the httpd user has access rights to read them.
+
+Do not consider Dumpomatic to be a backup solution; you should use it to keep
+a certain amount of dumps in a place from where your backup solution may collect
+them. Of course, 
+
+Using a reasonable amount of entries via the retention parameter is a good way
+to add a layer of redundancy to your backup solution: if there is a missed
+backup schedule, the backup process has an opportunity to grab the missing dumps
+as soon as it resumes.
