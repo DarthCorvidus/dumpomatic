@@ -1,4 +1,9 @@
 <?php
+/**
+ * @copyright (c) 2021, Claus-Christoph Küthe
+ * @author Claus-Christoph Küthe <dumpomatic@vm01.telton.de>
+ * @license GPLv3
+ */
 class DumpJob {
 	private $parsed;
 	private $name;
@@ -7,6 +12,7 @@ class DumpJob {
 	private $password;
 	private $user;
 	private $storage;
+	private $retention;
 	private $allowedRetention = array("daily", "weekly", "monthly", "yearly");
 	private $include;
 	private $exclude;
@@ -16,21 +22,26 @@ class DumpJob {
 	
 	static function fromArray(array $array): DumpJob {
 		$job = new DumpJob();
+		$import = new Import($array, new ImportJob());
+		$array = $import->getArray();
 		$job->sanityCheck($array);
 		$job->parsed = $array;
-		$job->name = $job->importString("name");
-		$job->driver = $job->importString("driver");
-		$job->host = $job->importString("host");
-		$job->password = $job->importString("password");
-		$job->user = $job->importString("user");
-		$job->storage = $job->importPath("storage");
+		$job->name = $array["name"];
+		$job->driver = $array["driver"];
+		$job->host = $array["host"];
+		$job->password = $array["password"];
+		$job->user = $array["user"];
+		$job->storage = $array["storage"];
+		if(isset($job->parsed["retention"])) {
+			$job->retention = $array["retention"];
+		}
 		if(isset($job->parsed["include"])) {
-			$job->include = $job->importArray("include");
+			$job->include = $array["include"];
 		}
 		if(isset($job->parsed["exclude"])) {
-			$job->exclude = $job->importArray("exclude");
+			$job->exclude = $array["exclude"];
 		}
-
+		
 	return $job;
 	}
 	
@@ -40,28 +51,6 @@ class DumpJob {
 		}
 	}
 	
-	private function importString(string $key): string {
-		if(!isset($this->parsed[$key])) {
-			throw new Exception("value ".$key." not defined");
-		}
-	return $this->parsed[$key];
-	}
-	
-	private function importPath(string $key): string {
-		$path = $this->importString($key);
-		if(!is_dir($path)) {
-			throw new Exception("path '".$path."' does not exist");
-		}
-	return $path;
-	}
-	
-	private function importArray(string $key): array {
-		if(!is_array($this->parsed[$key])) {
-			throw new InvalidArgumentException("expected array for key ".$key);
-		}
-		return $this->parsed[$key];
-	}
-
 	function getName(): string {
 		return $this->name;
 	}
@@ -114,7 +103,7 @@ class DumpJob {
 	}
 	
 	function getInclude(): array {
-		if($this->include==NULL) {
+		if(!$this->hasInclude()) {
 			throw new OutOfBoundsException("No include list defined");
 		}
 		return $this->include;
@@ -125,7 +114,7 @@ class DumpJob {
 	}
 	
 	function getExclude(): array {
-		if($this->exclude==NULL) {
+		if(!$this->hasExclude()) {
 			throw new OutOfBoundsException("No exclude list defined");
 		}
 		return $this->exclude;

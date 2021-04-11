@@ -31,9 +31,14 @@ class DumpJobTest extends TestCase {
 		$array["retention"]["yearly"] = 10;
 	return $array;
 	}
-	
-	
+
 	function testFromArray() {
+		$job = DumpJob::fromArray($this->getBaseArray());
+		$this->assertInstanceOf("DumpJob", $job);
+	}
+	
+	
+	function testFromArrayNoStorage() {
 		$array = $this->getBaseArray();
 		$array["storage"] = "tests/storag/";
 		$this->expectException(Exception::class);
@@ -41,11 +46,6 @@ class DumpJobTest extends TestCase {
 		$job = DumpJob::fromArray($array);
 	}
 
-	function testFromArrayNoStorage() {
-		$job = DumpJob::fromArray($this->getBaseArray());
-		$this->assertInstanceOf("DumpJob", $job);
-	}
-	
 	function testGetName() {
 		$job = DumpJob::fromArray($this->getBaseArray());
 		$this->assertEquals("Sample database", $job->getName());
@@ -149,8 +149,8 @@ class DumpJobTest extends TestCase {
 	
 	function testMutuallyExclusiveIncludeExclude() {
 		$array = $this->getBaseArray();
-		$array["include"] = array();
-		$array["exclude"] = array();
+		$array["include"] = array("accounting");
+		$array["exclude"] = array("employees");
 		$this->expectException(InvalidArgumentException::class);
 		$job = DumpJob::fromArray($array);
 	}
@@ -158,14 +158,16 @@ class DumpJobTest extends TestCase {
 	function testIncludeWrongType() {
 		$array = $this->getBaseArray();
 		$array["include"] = 15;
-		$this->expectException(InvalidArgumentException::class);
+		$this->expectException(ImportException::class);
+		$this->expectExceptionMessage("[\"include\"] is not an array");
 		$job = DumpJob::fromArray($array);
 	}
 
 	function testExcludeWrongType() {
 		$array = $this->getBaseArray();
 		$array["exclude"] = 15;
-		$this->expectException(InvalidArgumentException::class);
+		$this->expectException(ImportException::class);
+		$this->expectExceptionMessage("[\"exclude\"] is not an array");
 		$job = DumpJob::fromArray($array);
 	}
 	
