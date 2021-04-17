@@ -36,7 +36,6 @@ abstract class Dump {
 		$delete = array();
 		$nowJulian = $this->date->getNumeric();
 		$uptoJulian = $nowJulian-$this->job->getRetention("daily");
-		echo $nowJulian.PHP_EOL;
 		foreach(glob($this->job->getStorage()."/*") as $value) {
 			if(!preg_match("/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/", basename($value))) {
 				continue;
