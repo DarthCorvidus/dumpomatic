@@ -1,0 +1,11 @@
+- name: Sample database
+  host: tests/dumpomatic.sqlite
+  user: backup
+  password: TotallySecurePassword
+  storage: tests/storage/
+  driver: sqlite
+  retention:
+      daily: 28
+      weekly: 52
+      monthly: 12
+      yearly: 10

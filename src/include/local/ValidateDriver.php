@@ -11,7 +11,7 @@
  * Validates value for supported drivers.
  */
 class ValidateDriver implements Validate {
-	private $supported = array("mysql", "postgresql");
+	private $supported = array("mysql", "postgresql", "sqlite");
 	function validate(string $validee) {
 		if(!in_array($validee, $this->supported)) {
 			throw new ValidateException("driver '".$validee."' not supported");

@@ -67,6 +67,12 @@ class DumpJobs {
 			$backup->run();
 		return;
 		}
+		if($job->getDriver()=="sqlite") {
+			$backup = new DumpSQLite($this->date, $job);
+			$backup->run();
+		return;
+		}
+
 	}
 			
 	function run() {

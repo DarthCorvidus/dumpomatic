@@ -11,6 +11,7 @@ require_once __DIR__.'/include/lib/Date/Date.php';
 require_once __DIR__.'/include/local/Dump.php';
 require_once __DIR__.'/include/local/DumpPostgreSQL.php';
 require_once __DIR__.'/include/local/DumpMySQL.php';
+require_once __DIR__.'/include/local/DumpSQLite.php';
 require_once __DIR__.'/include/local/DumpJob.php';
 require_once __DIR__.'/include/local/DumpJobs.php';
 #/Include
