@@ -74,7 +74,7 @@ class DumpJobTest extends TestCase {
 	
 	function testGetStorage() {
 		$job = DumpJob::fromArray($this->getBaseArray());
-		$this->assertEquals("tests/storage/", $job->getStorage());
+		$this->assertEquals("tests/storage", $job->getStorage());
 	}
 	
 	function testHasRetentionDaily() {

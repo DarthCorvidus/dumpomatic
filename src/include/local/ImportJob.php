@@ -32,6 +32,7 @@ class ImportJob implements ImportModel {
 		$this->scalarValues["storage"] = new ScalarGeneric();
 		$this->scalarValues["storage"]->setMandatory();
 		$this->scalarValues["storage"]->setValidate(new ValidateStorage());
+		$this->scalarValues["storage"]->setConvert(new ConvertTrailingSlash());
 		
 		$this->scalarValues["driver"] = new ScalarGeneric();
 		$this->scalarValues["driver"]->setMandatory();

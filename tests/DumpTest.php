@@ -68,9 +68,9 @@ class DumpTest extends TestCase {
 		$dump->run();
 		$output[] = "Running Sample database";
 		$output[] = "Dumping dumpomatic...";
-		$output[] = "echo '.dump' | sqlite3 'tests/dumpomatic.sqlite' > 'tests/storage//temp/dumpomatic.temp.sql'";
-		$output[] = "gzip 'tests/storage//temp/dumpomatic.temp.sql'";
-		$output[] = "mv 'tests/storage//temp/dumpomatic.temp.sql.gz' 'tests/storage//temp/dumpomatic.sql.gz'";
+		$output[] = "echo '.dump' | sqlite3 'tests/dumpomatic.sqlite' > 'tests/storage/temp/dumpomatic.temp.sql'";
+		$output[] = "gzip 'tests/storage/temp/dumpomatic.temp.sql'";
+		$output[] = "mv 'tests/storage/temp/dumpomatic.temp.sql.gz' 'tests/storage/temp/dumpomatic.sql.gz'";
 		$output[] = "";
 		$output[] = "";
 		$this->expectOutputString(implode(PHP_EOL, $output).PHP_EOL);
@@ -93,11 +93,11 @@ class DumpTest extends TestCase {
 
 		$output = array();
 		$output[] = "Running Sample database";
-		$output[] = "rm 'tests/storage//".$this->date->getIsodate()."' -rvf";
+		$output[] = "rm 'tests/storage/".$this->date->getIsodate()."' -rvf";
 		$output[] = "Dumping dumpomatic...";
-		$output[] = "echo '.dump' | sqlite3 'tests/dumpomatic.sqlite' > 'tests/storage//temp/dumpomatic.temp.sql'";
-		$output[] = "gzip 'tests/storage//temp/dumpomatic.temp.sql'";
-		$output[] = "mv 'tests/storage//temp/dumpomatic.temp.sql.gz' 'tests/storage//temp/dumpomatic.sql.gz'";
+		$output[] = "echo '.dump' | sqlite3 'tests/dumpomatic.sqlite' > 'tests/storage/temp/dumpomatic.temp.sql'";
+		$output[] = "gzip 'tests/storage/temp/dumpomatic.temp.sql'";
+		$output[] = "mv 'tests/storage/temp/dumpomatic.temp.sql.gz' 'tests/storage/temp/dumpomatic.sql.gz'";
 		$output[] = "";
 		$output[] = "";
 		$this->expectOutputString(implode(PHP_EOL, $output).PHP_EOL);

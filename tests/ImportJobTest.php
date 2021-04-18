@@ -18,7 +18,7 @@ class ImportJobTest extends TestCase {
 		$job["host"] = "sample.example.com";
 		$job["user"] = "backup";
 		$job["password"] = "TotallySecurePassword";
-		$job["storage"] = "tests/storage/";
+		$job["storage"] = "tests/storage";
 		$job["driver"] = "mysql";
 		$importModel = new ImportJob();
 		$import = new Import($job, $importModel);
@@ -30,7 +30,7 @@ class ImportJobTest extends TestCase {
 		$job["host"] = "sample.example.com";
 		$job["user"] = "backup";
 		$job["password"] = "TotallySecurePassword";
-		$job["storage"] = "tests/storage/";
+		$job["storage"] = "tests/storage";
 		$job["driver"] = "mysql";
 		$job["retention"]["daily"] = "28";
 		$job["retention"]["weekly"] = "52";
@@ -46,7 +46,7 @@ class ImportJobTest extends TestCase {
 		$job["host"] = "sample.example.com";
 		$job["user"] = "backup";
 		$job["password"] = "TotallySecurePassword";
-		$job["storage"] = "tests/storage/";
+		$job["storage"] = "tests/storage";
 		$job["driver"] = "mysql";
 		$job["include"] = array("accounting", "employees");
 		$importModel = new ImportJob();
@@ -59,7 +59,7 @@ class ImportJobTest extends TestCase {
 		$job["host"] = "sample.example.com";
 		$job["user"] = "backup";
 		$job["password"] = "TotallySecurePassword";
-		$job["storage"] = "tests/storage/";
+		$job["storage"] = "tests/storage";
 		$job["driver"] = "mysql";
 		$job["exclude"] = array("logs");
 		$importModel = new ImportJob();
