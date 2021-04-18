@@ -16,14 +16,20 @@
 		{
 			"type": "vcs",
 			"url": "https://github.com/DarthCorvidus/plibv4-import"
+		},
+		{
+			"type": "vcs",
+			"url": "https://github.com/DarthCorvidus/plibv4-juliandate"
 		}
+
 	],
 	"name": "plibv4/dumpomatic",
 	"require": {
 			"plibv4/convert": "dev-main",
 			"plibv4/validate": "dev-main",
 			"plibv4/assert": "dev-main",
-			"plibv4/import": "dev-main"
+			"plibv4/import": "dev-main",
+			"plibv4/juliandate": "dev-main"
 	},
 	"autoload": {
         "classmap": ["src/"]

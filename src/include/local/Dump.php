@@ -7,7 +7,7 @@
 abstract class Dump {
 	protected $job;
 	private $date;
-	function __construct(Date $date, DumpJob $job) {
+	function __construct(JulianDate $date, DumpJob $job) {
 		$this->date = $date;
 		$this->job = $job;
 	}
@@ -34,14 +34,14 @@ abstract class Dump {
 	
 	private function honorRetentionDaily() {
 		$delete = array();
-		$nowJulian = $this->date->getNumeric();
+		$nowJulian = $this->date->toNumeric() ;
 		$uptoJulian = $nowJulian-$this->job->getRetention("daily");
 		foreach(glob($this->job->getStorage()."/*") as $value) {
 			if(!preg_match("/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/", basename($value))) {
 				continue;
 			}
-			$date = Date::fromIsodate(basename($value));
-			if($date->getNumeric()<=$uptoJulian) {
+			$date = JulianDate::fromString(basename($value));
+			if($date->toNumeric()<=$uptoJulian) {
 				$delete[] = $value;
 			}
 		}
@@ -61,7 +61,7 @@ abstract class Dump {
 		echo "Running ".$this->job->getName().PHP_EOL;
 		$names = $this->getDatabaseNames();
 		$temp = $this->job->getStorage()."/temp";
-		$final = $this->job->getStorage()."/".$this->date->getDate("Y-m-d");
+		$final = $this->job->getStorage()."/".$this->date->getFormat("Y-m-d");
 		$this->cleanup($temp);
 		$this->cleanup($final);
 		mkdir($temp);

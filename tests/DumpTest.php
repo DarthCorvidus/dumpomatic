@@ -21,7 +21,7 @@ class DumpTest extends TestCase {
 		 * 23:59:59, we have to use a global date that stays the same for the
 		 * whole test.
 		 */
-		$this->date = new Date();
+		$this->date = new JulianDate();
 	}
 	
 	/**
@@ -29,7 +29,7 @@ class DumpTest extends TestCase {
 	 * Remove Backup made by DumpSQLite
 	 */
 	function tearDown() {
-		exec("rm -rf ".escapeshellarg(__DIR__."/storage/".$this->date->getIsodate()));
+		exec("rm -rf ".escapeshellarg(__DIR__."/storage/".$this->date->__toString()));
 	}
 	
 	/**
@@ -87,7 +87,7 @@ class DumpTest extends TestCase {
 	 */
 	function testRunAgain() {
 		exec("mkdir ".escapeshellarg(__DIR__."/storage/".$this->date->getIsodate()));
-		$date = new Date();
+		$date = new JulianDate();
 		$job = DumpJob::fromArray($this->getArray());
 		$dump = new DumpSQLite($date, $job);
 
