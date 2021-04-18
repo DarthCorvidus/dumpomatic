@@ -18,7 +18,7 @@ class DumpSQLite extends Dump {
 		$final = $target."/".$name.".sql.gz";
 		$command[] = "echo '.dump' |";
 		$command[] = "sqlite3 ".escapeshellarg($this->job->getHost());
-		$command[] = "> ".$temp;
+		$command[] = "> ".escapeshellarg($temp);
 		#$command[] = "-h".$this->job->getHost();
 		#$command[] = "-Ft";
 		#$command[] = "--no-password";
