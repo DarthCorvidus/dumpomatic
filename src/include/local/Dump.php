@@ -34,14 +34,14 @@ abstract class Dump {
 	
 	private function honorRetentionDaily() {
 		$delete = array();
-		$nowJulian = $this->date->toNumeric() ;
+		$nowJulian = $this->date->toInt() ;
 		$uptoJulian = $nowJulian-$this->job->getRetention("daily");
 		foreach(glob($this->job->getStorage()."/*") as $value) {
 			if(!preg_match("/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/", basename($value))) {
 				continue;
 			}
 			$date = JulianDate::fromString(basename($value));
-			if($date->toNumeric()<=$uptoJulian) {
+			if($date->toInt()<=$uptoJulian) {
 				$delete[] = $value;
 			}
 		}
