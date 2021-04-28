@@ -1,0 +1,8 @@
+## YAML Template.
+---
+- name: Build Phuild
+  source: src/dumpomatic.php
+  target: dist/dumpomatic.php
+  includes:
+      - vendor/plibv4
+      - src/include
