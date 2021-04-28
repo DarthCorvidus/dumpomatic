@@ -1284,7 +1284,7 @@ class DumpPostgreSQL extends Dump {
  */
 class DumpMySQL extends Dump {
 	private $extra;
-	function __construct(\Date $date, DumpJob $job) {
+	function __construct(JulianDate $date, DumpJob $job) {
 		parent::__construct($date, $job);
 		/**
 		 * We store MySQL's username & password within a temporary .cnf-file.
