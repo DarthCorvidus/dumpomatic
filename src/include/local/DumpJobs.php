@@ -21,10 +21,15 @@ class DumpJobs {
 			throw new InvalidArgumentException("file '".$file."' could not be parsed.");
 		}
 		$jobs = new DumpJobs();
+		/**
+		 * @todo: Rework for testing
+		 * This is reasonable for production use, but defeats testing, as it
+		 * can never fail.
+		 */
 		foreach($parsed as $key => $value) {
 			try {
 				$jobs->jobs[] = DumpJob::fromArray($value);
-				$jobs->date = new Date();
+				$jobs->date = new JulianDate();
 			} catch (Exception $e) {
 				$jobs->failed[] = $file." ".$e->getMessage();
 			}
