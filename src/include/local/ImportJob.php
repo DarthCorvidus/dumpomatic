@@ -16,30 +16,24 @@ class ImportJob implements ImportModel {
 	private $scalarLists = array();
 	private $import = array();
 	function __construct() {
-		$this->scalarValues["name"] = new ScalarGeneric();
-		$this->scalarValues["name"]->setMandatory();
+		$this->scalarValues["name"] = UserValue::mandatory();
 		
-		$this->scalarValues["host"] = new ScalarGeneric();
-		$this->scalarValues["host"]->setMandatory();
+		$this->scalarValues["host"] = UserValue::mandatory();
 		
-		$this->scalarValues["user"] = new ScalarGeneric();
-		$this->scalarValues["user"]->setMandatory();
+		$this->scalarValues["user"] = UserValue::mandatory();
 
-		$this->scalarValues["password"] = new ScalarGeneric();
-		$this->scalarValues["password"]->setMandatory();
+		$this->scalarValues["password"] = UserValue::mandatory();
 
 		
-		$this->scalarValues["storage"] = new ScalarGeneric();
-		$this->scalarValues["storage"]->setMandatory();
+		$this->scalarValues["storage"] = UserValue::mandatory();
 		$this->scalarValues["storage"]->setValidate(new ValidateStorage());
 		$this->scalarValues["storage"]->setConvert(new ConvertTrailingSlash());
 		
-		$this->scalarValues["driver"] = new ScalarGeneric();
-		$this->scalarValues["driver"]->setMandatory();
+		$this->scalarValues["driver"] = UserValue::mandatory();
 		$this->scalarValues["driver"]->setValidate(new ValidateDriver());
 		
-		$this->scalarLists["include"] = new ScalarGeneric();
-		$this->scalarLists["exclude"] = new ScalarGeneric();
+		$this->scalarLists["include"] = UserValue::optional();
+		$this->scalarLists["exclude"] = UserValue::optional();
 		
 		$this->import["retention"] = new ImportRetention();;
 		
@@ -61,7 +55,7 @@ class ImportJob implements ImportModel {
 		return array_keys($this->import);
 	}
 
-	public function getScalarListModel($name): \ScalarModel {
+	public function getScalarListModel($name): UserValue {
 		return $this->scalarLists[$name];
 	}
 
@@ -69,7 +63,7 @@ class ImportJob implements ImportModel {
 		return array_keys($this->scalarLists);
 	}
 
-	public function getScalarModel($name): \ScalarModel {
+	public function getScalarModel($name): UserValue {
 		return $this->scalarValues[$name];
 	}
 

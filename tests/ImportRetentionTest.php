@@ -98,7 +98,7 @@ class ImportRetentionTest extends TestCase {
 		$importModel = new ImportRetention();
 		$import = new Import($array, $importModel);
 		$this->expectException(ImportException::class);
-		$this->expectExceptionMessage("Validation failed for [\"daily\"]:");
+		$this->expectExceptionMessage("[\"daily\"]: not a valid integer");
 		$import->getArray();
 	}
 
@@ -112,7 +112,7 @@ class ImportRetentionTest extends TestCase {
 		$importModel = new ImportRetention();
 		$import = new Import($array, $importModel);
 		$this->expectException(ImportException::class);
-		$this->expectExceptionMessage("Validation failed for [\"weekly\"]:");
+		$this->expectExceptionMessage("[\"weekly\"]: not a valid integer");
 		$import->getArray();
 	}
 
@@ -126,7 +126,7 @@ class ImportRetentionTest extends TestCase {
 		$importModel = new ImportRetention();
 		$import = new Import($array, $importModel);
 		$this->expectException(ImportException::class);
-		$this->expectExceptionMessage("Validation failed for [\"monthly\"]:");
+		$this->expectExceptionMessage("[\"monthly\"]: not a valid integer");
 		$import->getArray();
 	}
 
@@ -140,7 +140,7 @@ class ImportRetentionTest extends TestCase {
 		$importModel = new ImportRetention();
 		$import = new Import($array, $importModel);
 		$this->expectException(ImportException::class);
-		$this->expectExceptionMessage("Validation failed for [\"yearly\"]:");
+		$this->expectExceptionMessage("[\"yearly\"]: not a valid integer");
 		$import->getArray();
 	}
 

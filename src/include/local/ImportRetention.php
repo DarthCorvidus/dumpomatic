@@ -13,16 +13,16 @@
 class ImportRetention implements ImportModel {
 	public $scalarValues = array();
 	function __construct() {
-		$this->scalarValues["daily"] = new ScalarGeneric();
+		$this->scalarValues["daily"] = UserValue::optional();
 		$this->scalarValues["daily"]->setValidate(new ValidateInteger());
 
-		$this->scalarValues["weekly"] = new ScalarGeneric();
+		$this->scalarValues["weekly"] = UserValue::optional();
 		$this->scalarValues["weekly"]->setValidate(new ValidateInteger());
 
-		$this->scalarValues["monthly"] = new ScalarGeneric();
+		$this->scalarValues["monthly"] = UserValue::optional();
 		$this->scalarValues["monthly"]->setValidate(new ValidateInteger());
 
-		$this->scalarValues["yearly"] = new ScalarGeneric();
+		$this->scalarValues["yearly"] = UserValue::optional();
 		$this->scalarValues["yearly"]->setValidate(new ValidateInteger());
 	}
 
@@ -42,7 +42,7 @@ class ImportRetention implements ImportModel {
 		return array();
 	}
 
-	public function getScalarListModel($name): \ScalarModel {
+	public function getScalarListModel($name): UserValue {
 		
 	}
 
@@ -50,7 +50,7 @@ class ImportRetention implements ImportModel {
 		return array();
 	}
 
-	public function getScalarModel($name): \ScalarModel {
+	public function getScalarModel($name): UserValue {
 		return $this->scalarValues[$name];
 	}
 

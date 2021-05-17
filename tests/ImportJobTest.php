@@ -77,7 +77,7 @@ class ImportJobTest extends TestCase {
 		$importModel = new ImportJob();
 		$import = new Import($job, $importModel);
 		$this->expectException(ImportException::class);
-		$this->expectExceptionMessage("Validation failed for [\"driver\"]: driver 'fancybase' not supported");
+		$this->expectExceptionMessage("[\"driver\"]: driver 'fancybase' not supported");
 		$import->getArray();
 	}
 
