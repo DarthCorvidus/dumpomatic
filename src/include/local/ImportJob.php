@@ -16,24 +16,24 @@ class ImportJob implements ImportModel {
 	private $scalarLists = array();
 	private $import = array();
 	function __construct() {
-		$this->scalarValues["name"] = UserValue::mandatory();
+		$this->scalarValues["name"] = UserValue::asMandatory();
 		
-		$this->scalarValues["host"] = UserValue::mandatory();
+		$this->scalarValues["host"] = UserValue::asMandatory();
 		
-		$this->scalarValues["user"] = UserValue::mandatory();
+		$this->scalarValues["user"] = UserValue::asMandatory();
 
-		$this->scalarValues["password"] = UserValue::mandatory();
+		$this->scalarValues["password"] = UserValue::asMandatory();
 
 		
-		$this->scalarValues["storage"] = UserValue::mandatory();
+		$this->scalarValues["storage"] = UserValue::asMandatory();
 		$this->scalarValues["storage"]->setValidate(new ValidateStorage());
 		$this->scalarValues["storage"]->setConvert(new ConvertTrailingSlash());
 		
-		$this->scalarValues["driver"] = UserValue::mandatory();
+		$this->scalarValues["driver"] = UserValue::asMandatory();
 		$this->scalarValues["driver"]->setValidate(new ValidateDriver());
 		
-		$this->scalarLists["include"] = UserValue::optional();
-		$this->scalarLists["exclude"] = UserValue::optional();
+		$this->scalarLists["include"] = UserValue::asOptional();
+		$this->scalarLists["exclude"] = UserValue::asOptional();
 		
 		$this->import["retention"] = new ImportRetention();;
 		

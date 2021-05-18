@@ -13,16 +13,16 @@
 class ImportRetention implements ImportModel {
 	public $scalarValues = array();
 	function __construct() {
-		$this->scalarValues["daily"] = UserValue::optional();
+		$this->scalarValues["daily"] = UserValue::asOptional();
 		$this->scalarValues["daily"]->setValidate(new ValidateInteger());
 
-		$this->scalarValues["weekly"] = UserValue::optional();
+		$this->scalarValues["weekly"] = UserValue::asOptional();
 		$this->scalarValues["weekly"]->setValidate(new ValidateInteger());
 
-		$this->scalarValues["monthly"] = UserValue::optional();
+		$this->scalarValues["monthly"] = UserValue::asOptional();
 		$this->scalarValues["monthly"]->setValidate(new ValidateInteger());
 
-		$this->scalarValues["yearly"] = UserValue::optional();
+		$this->scalarValues["yearly"] = UserValue::asOptional();
 		$this->scalarValues["yearly"]->setValidate(new ValidateInteger());
 	}
 
