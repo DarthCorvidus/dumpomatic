@@ -2,7 +2,7 @@
   host: tests/dumpomatic.sqlite
   user: backup
   password: TotallySecurePassword
-  storage: tests/storage/
+  storage: tests/storage/sqlite
   driver: sqlite
   retention:
       daily: 28

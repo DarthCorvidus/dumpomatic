@@ -29,7 +29,13 @@ class DumpTest extends TestCase {
 	 * Remove Backup made by DumpSQLite
 	 */
 	function tearDown() {
+		exec("rm -rf ".escapeshellarg(__DIR__."/storage/sqlite/"));
 		exec("rm -rf ".escapeshellarg(__DIR__."/storage/".$this->date->__toString()));
+		
+	}
+	
+	function setUp() {
+		exec("mkdir ".escapeshellarg(__DIR__."/storage/sqlite/"));
 	}
 	
 	/**
@@ -68,14 +74,14 @@ class DumpTest extends TestCase {
 		$dump->run();
 		$output[] = "Running Sample database";
 		$output[] = "Dumping dumpomatic...";
-		$output[] = "echo '.dump' | sqlite3 'tests/dumpomatic.sqlite' > 'tests/storage/temp/dumpomatic.temp.sql'";
-		$output[] = "gzip 'tests/storage/temp/dumpomatic.temp.sql'";
-		$output[] = "mv 'tests/storage/temp/dumpomatic.temp.sql.gz' 'tests/storage/temp/dumpomatic.sql.gz'";
+		$output[] = "echo '.dump' | sqlite3 'tests/dumpomatic.sqlite' > 'tests/storage/sqlite/temp/dumpomatic.temp.sql'";
+		$output[] = "gzip 'tests/storage/sqlite/temp/dumpomatic.temp.sql'";
+		$output[] = "mv 'tests/storage/sqlite/temp/dumpomatic.temp.sql.gz' 'tests/storage/sqlite/temp/dumpomatic.sql.gz'";
 		$output[] = "";
 		$output[] = "";
 		$this->expectOutputString(implode(PHP_EOL, $output).PHP_EOL);
-		$this->assertFileExists(__DIR__."/storage/".$this->date->getIsodate());
-		$this->assertFileExists(__DIR__."/storage/".$this->date->getIsodate()."/dumpomatic.sql.gz");
+		$this->assertFileExists(__DIR__."/storage/sqlite/".$this->date->getIsodate());
+		$this->assertFileExists(__DIR__."/storage/sqlite/".$this->date->getIsodate()."/dumpomatic.sql.gz");
 	}
 	
 	/**
@@ -86,25 +92,55 @@ class DumpTest extends TestCase {
 	 * is successful.
 	 */
 	function testRunAgain() {
-		exec("mkdir ".escapeshellarg(__DIR__."/storage/".$this->date->getIsodate()));
+		exec("mkdir ".escapeshellarg(__DIR__."/storage/sqlite/".$this->date->getIsodate()));
 		$date = new JulianDate();
 		$job = DumpJob::fromArray($this->getArray());
 		$dump = new DumpSQLite($date, $job);
 
 		$output = array();
 		$output[] = "Running Sample database";
-		$output[] = "rm 'tests/storage/".$this->date->getIsodate()."' -rvf";
+		$output[] = "rm 'tests/storage/sqlite/".$this->date->getIsodate()."' -rvf";
 		$output[] = "Dumping dumpomatic...";
-		$output[] = "echo '.dump' | sqlite3 'tests/dumpomatic.sqlite' > 'tests/storage/temp/dumpomatic.temp.sql'";
-		$output[] = "gzip 'tests/storage/temp/dumpomatic.temp.sql'";
-		$output[] = "mv 'tests/storage/temp/dumpomatic.temp.sql.gz' 'tests/storage/temp/dumpomatic.sql.gz'";
+		$output[] = "echo '.dump' | sqlite3 'tests/dumpomatic.sqlite' > 'tests/storage/sqlite/temp/dumpomatic.temp.sql'";
+		$output[] = "gzip 'tests/storage/sqlite/temp/dumpomatic.temp.sql'";
+		$output[] = "mv 'tests/storage/sqlite/temp/dumpomatic.temp.sql.gz' 'tests/storage/sqlite/temp/dumpomatic.sql.gz'";
 		$output[] = "";
 		$output[] = "";
 		$this->expectOutputString(implode(PHP_EOL, $output).PHP_EOL);
 		
 		$dump->run();
-		$this->assertFileExists(__DIR__."/storage/".$date->getIsodate());
-		$this->assertFileExists(__DIR__."/storage/".$date->getIsodate()."/dumpomatic.sql.gz");
+		$this->assertFileExists(__DIR__."/storage/sqlite/".$date->getIsodate());
+		$this->assertFileExists(__DIR__."/storage/sqlite/".$date->getIsodate()."/dumpomatic.sql.gz");
+	}
+
+	function testMonthNoRetention() {
+		$array = $this->getArray();
+		unset($array["retention"]);
+		$job = DumpJob::fromArray($array);
+		$date = JulianDate::fromString("2020-01-01");
+		for($i=0;$i<31;$i++) {
+			$dump = new DumpSQLite(JulianDate::fromInt($date->toInt()+$i), $job);
+			$this->expectOutputRegex("/.*/");
+			$dump->run();
+		}
+		$this->assertFileExists(__DIR__."/storage/sqlite/2020-01-01/dumpomatic.sql.gz");
+		$this->assertFileExists(__DIR__."/storage/sqlite/2020-01-31/dumpomatic.sql.gz");
+	}
+
+	function testMonthRetention28DaysLater() {
+		$array = $this->getArray();
+		$job = DumpJob::fromArray($array);
+		$date = JulianDate::fromString("2020-01-01");
+		for($i=0;$i<31;$i++) {
+			$dump = new DumpSQLite(JulianDate::fromInt($date->toInt()+$i), $job);
+			$this->expectOutputRegex("/.*/");
+			$dump->run();
+		}
+		$this->assertEquals(FALSE, file_exists(__DIR__."/storage/sqlite/2020-01-01/dumpomatic.sql.gz"));
+		$this->assertEquals(FALSE, file_exists(__DIR__."/storage/sqlite/2020-01-02/dumpomatic.sql.gz"));
+		$this->assertEquals(FALSE, file_exists(__DIR__."/storage/sqlite/2020-01-03/dumpomatic.sql.gz"));
+		$this->assertFileExists(__DIR__."/storage/sqlite/2020-01-04/dumpomatic.sql.gz");
+		$this->assertFileExists(__DIR__."/storage/sqlite/2020-01-31/dumpomatic.sql.gz");
 	}
 
 }
