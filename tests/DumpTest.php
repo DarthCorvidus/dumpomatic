@@ -28,13 +28,13 @@ class DumpTest extends TestCase {
 	 * tearDown
 	 * Remove Backup made by DumpSQLite
 	 */
-	function tearDown() {
+	function tearDown(): void {
 		exec("rm -rf ".escapeshellarg(__DIR__."/storage/sqlite/"));
 		exec("rm -rf ".escapeshellarg(__DIR__."/storage/".$this->date->__toString()));
 		
 	}
 	
-	function setUp() {
+	function setUp(): void {
 		exec("mkdir ".escapeshellarg(__DIR__."/storage/sqlite/"));
 	}
 	
